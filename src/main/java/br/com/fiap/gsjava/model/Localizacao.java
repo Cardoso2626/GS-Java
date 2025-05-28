@@ -2,6 +2,8 @@ package br.com.fiap.gsjava.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Table(name = "tb_localizacao")
 @Entity
 public class Localizacao {
@@ -9,15 +11,18 @@ public class Localizacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private double latitude;
     private double longitude;
-    private Usuario idUsuario;
+    @OneToMany(mappedBy = "localizacao")
+    private List<Usuario> usuarios;
 
-
-    public Localizacao(double latitude, double longitude, Usuario idUsuario) {
+    public Localizacao(double latitude, double longitude, List<Usuario> usuarios) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.idUsuario = idUsuario;
+        this.usuarios = usuarios;
     }
-    public Localizacao() {}
+
+    public Localizacao() {
+
+    }
 
     public double getLatitude() {
         return latitude;
@@ -35,11 +40,11 @@ public class Localizacao {
         this.longitude = longitude;
     }
 
-    public Usuario getIdUsuario() {
-        return idUsuario;
+    public List<Usuario> getUsuarios() {
+        return usuarios;
     }
 
-    public void setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

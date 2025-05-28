@@ -4,23 +4,25 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+
 @Table(name = "tb_lembrete")
 @Entity
 public class Lembrete {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Usuario idUsuario;
     private String mensagem;
     private LocalDateTime dataHora;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
-    public Lembrete(Long id, Usuario idUsuario, String mensagem, LocalDateTime dataHora) {
+    public Lembrete(Long id, String mensagem, LocalDateTime dataHora, Usuario usuario) {
         this.id = id;
-        this.idUsuario = idUsuario;
         this.mensagem = mensagem;
         this.dataHora = dataHora;
+        this.usuario = usuario;
     }
-
     public Lembrete() {}
 
     public Long getId() {
@@ -29,14 +31,6 @@ public class Lembrete {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Usuario getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public String getMensagem() {
@@ -55,4 +49,11 @@ public class Lembrete {
         this.dataHora = dataHora;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

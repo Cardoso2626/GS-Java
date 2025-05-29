@@ -9,12 +9,14 @@ import java.util.List;
 public class Localizacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private double latitude;
     private double longitude;
     @OneToMany(mappedBy = "localizacao")
     private List<Usuario> usuarios;
 
-    public Localizacao(double latitude, double longitude, List<Usuario> usuarios) {
+    public Localizacao(Long id, double latitude, double longitude, List<Usuario> usuarios) {
+        this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.usuarios = usuarios;
@@ -22,6 +24,14 @@ public class Localizacao {
 
     public Localizacao() {
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getLatitude() {

@@ -5,6 +5,7 @@ import br.com.fiap.gsjava.dto.LocalizacaoRequestDTO;
 import br.com.fiap.gsjava.dto.LocalizacaoResponse;
 import br.com.fiap.gsjava.model.Localizacao;
 import br.com.fiap.gsjava.service.NominatimService;
+import br.com.fiap.gsjava.service.OverpassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,22 +13,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/localizacoes")
 public class LocalizacaoController {
 
-    @Autowired
-    private NominatimService nominatimService;
+    private final NominatimService nominatimService;
+    private final OverpassService overpassService;
 
-    @PostMapping("/criar")
-    public ResponseEntity<LocalizacaoResponse> criarLocalizacao(@RequestBody LocalizacaoRequestDTO dto) {
-        Localizacao localizacao = new Localizacao();
-        localizacao.setLatitude(dto.latitude());
-        localizacao.setLongitude(dto.longitude());
-        // id será gerado automaticamente
+    public LocalizacaoController(NominatimService nominatimService, OverpassService overpassService) {
+        this.nominatimService = nominatimService;
+        this.overpassService = overpassService;
+    }
 
-        LocalizacaoResponse resposta = nominatimService.criarResposta(localizacao);
+    // Salva localização com endereço do Nominatim
+    @PostMapping("/salvar")
+    public ResponseEntity<LocalizacaoResponse> salvarLocalizacao(@RequestBody LocalizacaoRequestDTO localizacaoRequest) {
+        LocalizacaoResponse resposta = nominatimService.buscarEnderecoESalvar(localizacaoRequest);
         return ResponseEntity.ok(resposta);
     }
 
+    // Busca lugares seguros próximos (escolas, delegacias, etc)
+    @PostMapping("/lugares-seguros")
+    public ResponseEntity<List<LocalizacaoResponse>> buscarLugaresSeguros(@RequestBody LocalizacaoRequestDTO localizacaoRequest) {
+        List<LocalizacaoResponse> locais = overpassService.buscarLocaisSeguros(localizacaoRequest);
+        return ResponseEntity.ok(locais);
+    }
 }

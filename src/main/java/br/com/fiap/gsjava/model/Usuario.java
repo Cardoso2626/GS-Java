@@ -1,12 +1,17 @@
 package br.com.fiap.gsjava.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.StringReader;
+import java.util.Collection;
 import java.util.List;
 
 @Table(name = "tb_usuarios")
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,6 +19,8 @@ public class Usuario {
     private String senha;
     private String cpf;
     private String nome;
+    private UsuarioRole role;
+
 
     @ManyToOne
     @JoinColumn(name = "localizacao_id")
@@ -22,7 +29,13 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Lembrete> lembretes;
 
-    public Usuario(Long id, String email, String senha, String cpf, String nome, Localizacao localizacao, List<Lembrete> lembretes) {
+    public Usuario(String email, String senha, UsuarioRole role) {
+        this.email = email;
+        this.senha = senha;
+        this.role = role;
+    }
+
+    public Usuario(Long id, String email, String senha, String cpf, String nome, Localizacao localizacao, List<Lembrete> lembretes, UsuarioRole role) {
         this.id = id;
         this.email = email;
         this.senha = senha;
@@ -30,8 +43,17 @@ public class Usuario {
         this.nome = nome;
         this.localizacao = localizacao;
         this.lembretes = lembretes;
+        this.role = role;
     }
     public Usuario() {}
+
+    public UsuarioRole getRole() {
+        return role;
+    }
+
+    public void setRole(UsuarioRole role) {
+        this.role = role;
+    }
 
     public Long getId() {
         return id;
@@ -87,5 +109,42 @@ public class Usuario {
 
     public void setLembretes(List<Lembrete> lembretes) {
         this.lembretes = lembretes;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == UsuarioRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

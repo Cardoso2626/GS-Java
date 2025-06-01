@@ -11,6 +11,7 @@ public class Lembrete {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String mensagem;
     private LocalDateTime dataHora;
     @ManyToOne

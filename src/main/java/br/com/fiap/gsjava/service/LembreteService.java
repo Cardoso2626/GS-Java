@@ -1,8 +1,15 @@
 package br.com.fiap.gsjava.service;
 
 
+import br.com.fiap.gsjava.dto.LembreteRequest;
+import br.com.fiap.gsjava.dto.LembreteRequestDTO;
+import br.com.fiap.gsjava.dto.LembreteResponse;
+import br.com.fiap.gsjava.model.Lembrete;
 import br.com.fiap.gsjava.repository.LembreteRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -28,7 +35,7 @@ public class LembreteService {
         lembrete.setDataHora(dto.dataHora());
         lembrete.setUsuario(usuario);
         lembrete = lembreteRepository.save(lembrete);
-        return new LembreteResponse(lembrete.getId(), lembrete.getMensagem(), lembrete.getDataHora(), usuario.getId());
+        return new LembreteResponse(lembrete.getId(), lembrete.getMensagem(), lembret       ne.getDataHora(), usuario.getId());
     }
 
     public LembreteResponse atualizarLembrete(LembreteRequest dto) {

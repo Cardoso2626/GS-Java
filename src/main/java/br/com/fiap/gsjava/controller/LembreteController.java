@@ -6,9 +6,12 @@ import br.com.fiap.gsjava.dto.LembreteRequestDTO;
 import br.com.fiap.gsjava.dto.LembreteResponse;
 import br.com.fiap.gsjava.model.Lembrete;
 import br.com.fiap.gsjava.service.LembreteService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -23,7 +26,7 @@ public class LembreteController {
 
     //CRIAR LEMBRETE
     @PostMapping()
-    public ResponseEntity<LembreteResponse> post(@RequestBody LembreteRequestDTO lembreteRequestDTO) {
+    public ResponseEntity<LembreteResponse> post( @Valid @RequestBody LembreteRequestDTO lembreteRequestDTO) {
         LembreteResponse response = lembreteService.criarLembrete(lembreteRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -35,5 +38,10 @@ public class LembreteController {
         lembreteService.deletarLembrete(id);
     }
 
+    //BUSCANDO LEMBRETES POR EMAIL
+    @GetMapping("/usuario/{email}")
+    public List<LembreteResponse> getLembretesPorEmail(@PathVariable String email) {
+        return lembreteService.buscarLembretesPorEmail(email);
+    }
 
 }

@@ -8,5 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LembreteRepository extends JpaRepository<Lembrete, Long> {
+    List<Lembrete> findByUsuarioEmail(String email);
 
 }

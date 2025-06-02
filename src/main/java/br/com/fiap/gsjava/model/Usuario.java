@@ -28,7 +28,9 @@ public class Usuario implements UserDetails {
             message = "O CPF deve conter exatamente 11 dígitos numéricos (somente números)"
     )
     private String cpf;
+    @NotBlank(message = "O nome é obrigatório")
     private String nome;
+    @NotBlank(message = "O nome é obrigatório")
     private UsuarioRole role;
 
 

@@ -1,37 +1,39 @@
 package br.com.fiap.gsjava.controller;
 
 
-import br.com.fiap.gsjava.repository.LembreteRepository;
-import br.com.fiap.gsjava.service.LembreteService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiap.gsjava.dto.LembreteRequestDTO;
+import br.com.fiap.gsjava.dto.LembreteResponse;
+import br.com.fiap.gsjava.model.Lembrete;
+import br.com.fiap.gsjava.service.LembreteService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/lembretes")
 public class LembreteController {
 
-    private final LembreteRepository lembreteService;
+    private final LembreteService lembreteService;
 
     public LembreteController(LembreteService lembreteService) {
         this.lembreteService = lembreteService;
     }
 
-    @PostMapping("/{idUsuario}")
-    public ResponseEntity<LembreteResponse> criarLembrete(
-            @PathVariable Long idUsuario,
-            @RequestBody LembreteRequestDTO dto) {
-        return ResponseEntity.ok(lembreteService.criarLembrete(dto, idUsuario));
+    //CRIAR LEMBRETE
+    @PostMapping()
+    public ResponseEntity<LembreteResponse> post(@RequestBody LembreteRequestDTO lembreteRequestDTO) {
+        LembreteResponse response = lembreteService.criarLembrete(lembreteRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping
-    public ResponseEntity<LembreteResponse> atualizarLembrete(@RequestBody LembreteRequest dto) {
-        return ResponseEntity.ok(lembreteService.atualizarLembrete(dto));
+
+    //DELETAR
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        lembreteService.deletarLembrete(id);
     }
 
-    @GetMapping("/{idUsuario}")
-    public ResponseEntity<List<LembreteResponse>> listarLembretes(@PathVariable Long idUsuario) {
-        return ResponseEntity.ok(lembreteService.listarLembretesPorUsuario(idUsuario));
-    }
+
 }

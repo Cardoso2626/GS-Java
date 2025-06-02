@@ -1,6 +1,8 @@
 package br.com.fiap.gsjava.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +17,16 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "O email é obrigatório")
     private String email;
+    @NotBlank(message = "A senha é obrigatória")
     private String senha;
+    @NotBlank(message = "O cpf é obrigatório")
+    @Pattern(
+            regexp = "\\d{11}",
+            message = "O CPF deve conter exatamente 11 dígitos numéricos (somente números)"
+    )
     private String cpf;
     private String nome;
     private UsuarioRole role;

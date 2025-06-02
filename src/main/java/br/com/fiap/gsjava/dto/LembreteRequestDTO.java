@@ -1,7 +1,32 @@
 package br.com.fiap.gsjava.dto;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
-public record LembreteRequestDTO (String mensagem, LocalDateTime dataHora) {
+public class LembreteRequestDTO {
+    @NotBlank(message = "A mensagem é obrigatória")
+    private String mensagem;
+    @NotNull(message = "A data e a hora dos lembretes são obrigatórios")
+    @Future
+    private LocalDateTime dataHora;
 
+    public String getMensagem() {
+        return mensagem;
+    }
+
+    public void setMensagem(String mensagem) {
+        this.mensagem = mensagem;
+    }
+
+    public LocalDateTime getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(LocalDateTime dataHora) {
+        this.dataHora = dataHora;
+    }
 }

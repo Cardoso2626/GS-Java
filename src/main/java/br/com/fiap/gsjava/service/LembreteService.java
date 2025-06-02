@@ -5,7 +5,10 @@ import br.com.fiap.gsjava.dto.LembreteRequest;
 import br.com.fiap.gsjava.dto.LembreteRequestDTO;
 import br.com.fiap.gsjava.dto.LembreteResponse;
 import br.com.fiap.gsjava.model.Lembrete;
+import br.com.fiap.gsjava.model.Usuario;
 import br.com.fiap.gsjava.repository.LembreteRepository;
+import br.com.fiap.gsjava.repository.UsuarioRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,57 +19,29 @@ import java.util.List;
 public class LembreteService {
 
     private final LembreteRepository lembreteRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final FCMService fcmService;
 
-    public LembreteService(LembreteRepository lembreteRepository,
-                           UsuarioRepository usuarioRepository,
-                           FCMService fcmService) {
+    public LembreteService(LembreteRepository lembreteRepository) {
         this.lembreteRepository = lembreteRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.fcmService = fcmService;
+
     }
 
-    public LembreteResponse criarLembrete(LembreteRequestDTO dto, Long idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    public LembreteResponse criarLembrete(LembreteRequestDTO lembreteRequestDTO) {
         Lembrete lembrete = new Lembrete();
-        lembrete.setMensagem(dto.mensagem());
-        lembrete.setDataHora(dto.dataHora());
-        lembrete.setUsuario(usuario);
+        lembrete.setDataHora(lembreteRequestDTO.getDataHora());
+        lembrete.setMensagem(lembreteRequestDTO.getMensagem());
+
         lembrete = lembreteRepository.save(lembrete);
-        return new LembreteResponse(lembrete.getId(), lembrete.getMensagem(), lembret       ne.getDataHora(), usuario.getId());
+
+        return new LembreteResponse(
+                lembrete.getMensagem(),
+                lembrete.getDataHora(),
+                null
+        );
     }
 
-    public LembreteResponse atualizarLembrete(LembreteRequest dto) {
-        Usuario usuario = usuarioRepository.findById(dto.idUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        Lembrete lembrete = lembreteRepository.findById(dto.id())
-                .orElseThrow(() -> new RuntimeException("Lembrete não encontrado"));
-        lembrete.setMensagem(dto.mensagem());
-        lembrete.setDataHora(dto.dataHora());
-        lembrete.setUsuario(usuario);
-        lembrete = lembreteRepository.save(lembrete);
-        return new LembreteResponse(lembrete.getId(), lembrete.getMensagem(), lembrete.getDataHora(), usuario.getId());
+    public void deletarLembrete(Long id){
+        lembreteRepository.deleteById(id);
     }
 
-    public List<LembreteResponse> listarLembretesPorUsuario(Long idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        List<Lembrete> lembretes = lembreteRepository.findByUsuario(usuario);
-        return lembretes.stream()
-                .map(l -> new LembreteResponse(l.getId(), l.getMensagem(), l.getDataHora(), usuario.getId()))
-                .toList();
-    }
 
-    @Scheduled(fixedRate = 60000)
-    public void verificarLembretes() {
-        LocalDateTime agora = LocalDateTime.now();
-        List<Lembrete> lembretesPendentes = lembreteRepository.findByDataHoraBefore(agora);
-        for (Lembrete lembrete : lembretesPendentes) {
-            if (lembrete.getUsuario() != null && lembrete.getUsuario().getTokenFCM() != null) {
-                fcmService.enviarNotificacao(lembrete.getUsuario().getTokenFCM(), "Lembrete!", lembrete.getMensagem());
-            }
-        }
-    }
 }

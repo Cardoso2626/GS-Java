@@ -4,10 +4,14 @@ package br.com.fiap.gsjava.service;
 import br.com.fiap.gsjava.dto.LembreteRequest;
 import br.com.fiap.gsjava.dto.LembreteRequestDTO;
 import br.com.fiap.gsjava.dto.LembreteResponse;
+import br.com.fiap.gsjava.dto.LembreteResponseDTO;
+import br.com.fiap.gsjava.mapper.LembreteMapper;
 import br.com.fiap.gsjava.model.Lembrete;
 import br.com.fiap.gsjava.model.Usuario;
 import br.com.fiap.gsjava.repository.LembreteRepository;
 import br.com.fiap.gsjava.repository.UsuarioRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,10 +24,12 @@ public class LembreteService {
 
     private final LembreteRepository lembreteRepository;
     private final UsuarioRepository usuarioRepository;
+    private final LembreteMapper lembreteMapper;
 
-    public LembreteService(LembreteRepository lembreteRepository, UsuarioRepository usuarioRepository) {
+    public LembreteService(LembreteRepository lembreteRepository, UsuarioRepository usuarioRepository, LembreteMapper lembreteMapper) {
         this.lembreteRepository = lembreteRepository;
         this.usuarioRepository = usuarioRepository;
+        this.lembreteMapper = lembreteMapper;
 
     }
 
@@ -81,6 +87,12 @@ public class LembreteService {
 
         Lembrete atualizado = lembreteRepository.save(lembrete);
         return new LembreteResponse(atualizado.getMensagem(), atualizado.getDataHora(), atualizado.getUsuario().getId());
+    }
+
+    //MÉTODO PARA LISTAR OS LEMBRETES
+    public Page<LembreteResponseDTO> listarLembretesPaginado(Pageable pageable) {
+        Page<Lembrete> lembretePage = lembreteRepository.findAll(pageable);
+        return lembretePage.map(lembreteMapper::toResponseDTO);
     }
 }
 

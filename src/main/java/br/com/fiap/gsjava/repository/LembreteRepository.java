@@ -1,13 +1,13 @@
 package br.com.fiap.gsjava.repository;
 
 import br.com.fiap.gsjava.model.Lembrete;
-import br.com.fiap.gsjava.model.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 public interface LembreteRepository extends JpaRepository<Lembrete, Long> {
     List<Lembrete> findByUsuarioEmail(String email);
+    Page<Lembrete> findAll(Pageable pageable);
 }

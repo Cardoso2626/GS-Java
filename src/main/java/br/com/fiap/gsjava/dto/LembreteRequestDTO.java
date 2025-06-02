@@ -14,6 +14,14 @@ public class LembreteRequestDTO {
     @Future
     private LocalDateTime dataHora;
 
+    public LembreteRequestDTO(String mensagem, LocalDateTime dataHora) {
+        this.mensagem = mensagem;
+        this.dataHora = dataHora;
+    }
+
+    public LembreteRequestDTO() {
+
+    }
     public String getMensagem() {
         return mensagem;
     }

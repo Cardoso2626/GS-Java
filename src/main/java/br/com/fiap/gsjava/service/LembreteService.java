@@ -8,8 +8,6 @@ import br.com.fiap.gsjava.model.Lembrete;
 import br.com.fiap.gsjava.model.Usuario;
 import br.com.fiap.gsjava.repository.LembreteRepository;
 import br.com.fiap.gsjava.repository.UsuarioRepository;
-import org.apache.catalina.authenticator.SavedRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,9 +19,11 @@ import java.util.stream.Collectors;
 public class LembreteService {
 
     private final LembreteRepository lembreteRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public LembreteService(LembreteRepository lembreteRepository) {
+    public LembreteService(LembreteRepository lembreteRepository, UsuarioRepository usuarioRepository) {
         this.lembreteRepository = lembreteRepository;
+        this.usuarioRepository = usuarioRepository;
 
     }
 
@@ -60,7 +60,31 @@ public class LembreteService {
                 .collect(Collectors.toList());
     }
 
+    //Atualiza lembrete pelo email pegando o id do lembrete específico
+    public LembreteResponse atualizarPorEmailELembreteId(LembreteRequest request) {
+
+        Usuario usuario = usuarioRepository.findOptionalByEmail(request.emailUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
 
+        Lembrete lembrete = lembreteRepository.findById(request.idLembrete())
+                .orElseThrow(() -> new RuntimeException("Lembrete não encontrado"));
 
+
+        if (!lembrete.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("Lembrete não pertence ao usuário informado");
+        }
+
+
+        lembrete.setMensagem(request.mensagem());
+        lembrete.setDataHora(request.dataHora());
+
+        Lembrete atualizado = lembreteRepository.save(lembrete);
+        return new LembreteResponse(atualizado.getMensagem(), atualizado.getDataHora(), atualizado.getUsuario().getId());
+    }
 }
+
+
+
+
+

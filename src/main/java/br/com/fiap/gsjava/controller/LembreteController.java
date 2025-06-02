@@ -2,6 +2,7 @@ package br.com.fiap.gsjava.controller;
 
 
 
+import br.com.fiap.gsjava.dto.LembreteRequest;
 import br.com.fiap.gsjava.dto.LembreteRequestDTO;
 import br.com.fiap.gsjava.dto.LembreteResponse;
 import br.com.fiap.gsjava.model.Lembrete;
@@ -32,12 +33,19 @@ public class LembreteController {
     }
 
 
-    //DELETAR
+
+    //DELETAR LEMBRETE
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         lembreteService.deletarLembrete(id);
     }
 
+
+    //ATUALIZAR LEMBRETE
+    @PutMapping("/atualizar")
+    public LembreteResponse atualizarLembrete(@RequestBody LembreteRequest request) {
+        return lembreteService.atualizarPorEmailELembreteId(request);
+    }
     //BUSCANDO LEMBRETES POR EMAIL
     @GetMapping("/usuario/{email}")
     public List<LembreteResponse> getLembretesPorEmail(@PathVariable String email) {

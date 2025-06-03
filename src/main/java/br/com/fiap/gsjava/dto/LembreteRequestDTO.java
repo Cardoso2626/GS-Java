@@ -1,7 +1,7 @@
 package br.com.fiap.gsjava.dto;
 
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

@@ -3,10 +3,8 @@ package br.com.fiap.gsjava.controller;
 
 import br.com.fiap.gsjava.dto.LocalizacaoRequestDTO;
 import br.com.fiap.gsjava.dto.LocalizacaoResponse;
-import br.com.fiap.gsjava.model.Localizacao;
 import br.com.fiap.gsjava.service.NominatimService;
 import br.com.fiap.gsjava.service.OverpassService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

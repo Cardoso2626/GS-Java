@@ -6,7 +6,6 @@ import br.com.fiap.gsjava.dto.LembreteRequest;
 import br.com.fiap.gsjava.dto.LembreteRequestDTO;
 import br.com.fiap.gsjava.dto.LembreteResponse;
 import br.com.fiap.gsjava.dto.LembreteResponseDTO;
-import br.com.fiap.gsjava.model.Lembrete;
 import br.com.fiap.gsjava.service.LembreteService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

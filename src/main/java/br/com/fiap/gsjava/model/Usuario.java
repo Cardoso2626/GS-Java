@@ -1,6 +1,7 @@
 package br.com.fiap.gsjava.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,13 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Table(name = "tb_usuarios")
-@Entity
+@Entity(name = "users")
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "O email é obrigatório")
+    @Email(message = "O email deve ser válido")
     private String email;
     @NotBlank(message = "A senha é obrigatória")
     private String senha;

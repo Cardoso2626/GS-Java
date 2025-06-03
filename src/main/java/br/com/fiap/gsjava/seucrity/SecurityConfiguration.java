@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +29,17 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/lembretes").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/localizacoes/salvar").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/localizacoes/lugares-seguros").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/lugares-seguros").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/lugares-seguros/{id}").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/lembretes/atualizar").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/lembretes").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/lembretes/usuario/{email}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/lembretes/paginado").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/lembretes/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/lugares-seguros/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/lugares-seguros").hasRole("ADMIN")
                 .anyRequest().authenticated()
 
                 )
@@ -40,6 +51,11 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
 
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/v3/api-docs/**", "/swagger-ui/**");
     }
 
     @Bean

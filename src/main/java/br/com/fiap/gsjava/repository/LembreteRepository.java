@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface LembreteRepository extends JpaRepository<Lembrete, Long> {
     List<Lembrete> findByUsuarioEmail(String email);
+    Page<Lembrete> findByUsuario_Email(String email, Pageable pageable);
     Page<Lembrete> findAll(Pageable pageable);
+
 }

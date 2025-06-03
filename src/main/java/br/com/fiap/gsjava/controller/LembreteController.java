@@ -60,7 +60,7 @@ public class LembreteController {
     public ResponseEntity<Page<LembreteResponseDTO>> listarLembretesPaginado(
             @PathVariable Long usuarioId,
             @PageableDefault(page = 0, size = 10, sort = "dataHora,desc") Pageable pageable) {
-        Page<LembreteResponseDTO> lembretePage = lembreteService.listarLembretesPaginado(pageable);
+        Page<LembreteResponseDTO> lembretePage = lembreteService.listarLembretesPorUsuarioEmailPaginado(usuarioId, pageable);
         return ResponseEntity.ok(lembretePage);
     }
 

@@ -89,9 +89,12 @@ public class LembreteService {
         return new LembreteResponse(atualizado.getMensagem(), atualizado.getDataHora(), atualizado.getUsuario().getId());
     }
 
-    //MÉTODO PARA LISTAR OS LEMBRETES
-    public Page<LembreteResponseDTO> listarLembretesPaginado(Pageable pageable) {
-        Page<Lembrete> lembretePage = lembreteRepository.findAll(pageable);
+
+    //PAGINARPOREMAILDOUSUARIOEID
+    public Page<LembreteResponseDTO> listarLembretesPorUsuarioEmailPaginado(Long usuarioId, Pageable pageable) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + usuarioId));
+        Page<Lembrete> lembretePage = lembreteRepository.findByUsuario_Email(usuario.getEmail(), pageable);
         return lembretePage.map(lembreteMapper::toResponseDTO);
     }
 }

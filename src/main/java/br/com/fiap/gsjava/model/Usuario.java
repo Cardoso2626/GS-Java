@@ -32,7 +32,6 @@ public class Usuario implements UserDetails {
     private String cpf;
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
-    @NotBlank(message = "O nome é obrigatório")
     private UsuarioRole role;
 
 
@@ -43,9 +42,11 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario")
     private List<Lembrete> lembretes;
 
-    public Usuario(String email, String senha, UsuarioRole role) {
+    public Usuario(String email, String senha, String cpf, String nome, UsuarioRole role) {
         this.email = email;
         this.senha = senha;
+        this.cpf = cpf;
+        this.nome = nome;
         this.role = role;
     }
 

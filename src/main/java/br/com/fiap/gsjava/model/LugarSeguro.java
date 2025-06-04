@@ -7,9 +7,13 @@ import jakarta.persistence.*;
 public class LugarSeguro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "nome")
     private String nome;
+    @Column(name = "latitude")
     private Double latitude;
+    @Column(name = "longitude")
     private Double longitude;
 
     public LugarSeguro() {

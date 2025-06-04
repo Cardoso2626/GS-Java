@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 public class Lembrete {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-
+    @Column(name = "mensagem")
     private String mensagem;
+    @Column(name = "data_hora")
     private LocalDateTime dataHora;
     @ManyToOne
     @JoinColumn(name = "usuario_id")

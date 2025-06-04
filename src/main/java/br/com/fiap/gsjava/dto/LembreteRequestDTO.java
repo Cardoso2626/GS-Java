@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class LembreteRequestDTO {
     @NotBlank(message = "A mensagem é obrigatória")
     private String mensagem;
-    @NotNull(message = "A data e a hora dos lembretes são obrigatórios")
+    @NotNull(message = "A data e a hora dos lembretes são obrigatórios, e devem seguir o formato 2025-06-07T15:30:00")
     @Future
     private LocalDateTime dataHora;
 

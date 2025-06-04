@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/lembretes").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/lembretes/usuario/{email}").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/lembretes/paginado").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/lembretes/atualizar/email").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/lembretes/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/lugares-seguros/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/lugares-seguros").hasRole("ADMIN")

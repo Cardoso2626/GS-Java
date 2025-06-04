@@ -5,6 +5,7 @@ import br.com.fiap.gsjava.dto.LocalizacaoRequestDTO;
 import br.com.fiap.gsjava.dto.LocalizacaoResponse;
 import br.com.fiap.gsjava.service.NominatimService;
 import br.com.fiap.gsjava.service.OverpassService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ public class LocalizacaoController {
 
     // Salva localização com endereço do Nominatim
     @PostMapping("/salvar")
-    public ResponseEntity<LocalizacaoResponse> salvarLocalizacao(@RequestBody LocalizacaoRequestDTO localizacaoRequest) {
+    public ResponseEntity<LocalizacaoResponse> salvarLocalizacao(@Valid @RequestBody LocalizacaoRequestDTO localizacaoRequest) {
         LocalizacaoResponse resposta = nominatimService.buscarEnderecoESalvar(localizacaoRequest);
         return ResponseEntity.ok(resposta);
     }

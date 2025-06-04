@@ -17,21 +17,28 @@ import java.util.List;
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @NotBlank(message = "O email é obrigatório")
     @Email(message = "O email deve ser válido")
+    @Column(name = "email")
     private String email;
     @NotBlank(message = "A senha é obrigatória")
+    @Column(name = "senha")
     private String senha;
     @NotBlank(message = "O cpf é obrigatório")
     @Pattern(
             regexp = "\\d{11}",
             message = "O CPF deve conter exatamente 11 dígitos numéricos (somente números)"
     )
+    @Column(name = "cpf")
     private String cpf;
     @NotBlank(message = "O nome é obrigatório")
+    @Column(name = "nome")
     private String nome;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private UsuarioRole role;
 
 

@@ -57,11 +57,20 @@ public class LembreteController {
 
     //paginação de lembretes por id do usuario
     @GetMapping("/paginado")
-    public ResponseEntity<Page<LembreteResponseDTO>> listarLembretesPaginado(
-            @PathVariable Long usuarioId,
+    public ResponseEntity<Page<LembreteResponseDTO>> listarTodosLembretesPaginado(
             @PageableDefault(page = 0, size = 10, sort = "dataHora,desc") Pageable pageable) {
-        Page<LembreteResponseDTO> lembretePage = lembreteService.listarLembretesPorUsuarioEmailPaginado(usuarioId, pageable);
+        // Você precisará de um método no seu serviço que liste todos os lembretes paginados
+        Page<LembreteResponseDTO> lembretePage = lembreteService.listarTodosLembretesPaginado(pageable);
         return ResponseEntity.ok(lembretePage);
+    }
+    @PutMapping("/atualizar/email")
+    public ResponseEntity<LembreteResponseDTO> atualizarEmailLembrete(@RequestBody LembreteRequest request) {
+        try {
+            LembreteResponseDTO atualizado = lembreteService.atualizarEmailLembrete(request);
+            return ResponseEntity.ok(atualizado);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
 }

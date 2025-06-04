@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -41,6 +42,7 @@ public class LembreteService {
         lembrete = lembreteRepository.save(lembrete);
 
         return new LembreteResponse(
+                lembrete.getId(),
                 lembrete.getMensagem(),
                 lembrete.getDataHora(),
                 null
@@ -58,6 +60,7 @@ public class LembreteService {
 
         return lembretes.stream()
                 .map(lembrete -> new LembreteResponse(
+                        lembrete.getId(),
                         lembrete.getMensagem(),
                         lembrete.getDataHora(),
                         lembrete.getUsuario().getId()
@@ -85,15 +88,45 @@ public class LembreteService {
         lembrete.setDataHora(request.dataHora());
 
         Lembrete atualizado = lembreteRepository.save(lembrete);
-        return new LembreteResponse(atualizado.getMensagem(), atualizado.getDataHora(), atualizado.getUsuario().getId());
+        return new LembreteResponse(atualizado.getId(), atualizado.getMensagem(), atualizado.getDataHora(), atualizado.getUsuario().getId());
     }
 
 
-    //PAGINARPOREMAILDOUSUARIOEID
-    public Page<LembreteResponseDTO> listarLembretesPorUsuarioEmailPaginado(Long usuarioId, Pageable pageable) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + usuarioId));
-        Page<Lembrete> lembretePage = lembreteRepository.findByUsuario_Email(usuario.getEmail(), pageable);
+    //ATUALIZA O EMAIL DO USUARIO DO LEMBRETE
+    public LembreteResponseDTO atualizarEmailLembrete(LembreteRequest request) {
+        Optional<Lembrete> lembreteOptional = lembreteRepository.findById(request.idLembrete());
+
+        if (lembreteOptional.isEmpty()) {
+            throw new RuntimeException("Lembrete não encontrado");
+        }
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findOptionalByEmail(request.emailUsuario());
+
+        if (usuarioOptional.isEmpty()) {
+            throw new RuntimeException("Usuário não encontrado com o e-mail informado");
+        }
+
+        Lembrete lembrete = lembreteOptional.get();
+        Usuario usuario = usuarioOptional.get();
+
+        lembrete.setMensagem(request.mensagem());
+        lembrete.setDataHora(request.dataHora());
+        lembrete.setUsuario(usuario);
+
+        Lembrete atualizado = lembreteRepository.save(lembrete);
+
+        return new LembreteResponseDTO(
+                atualizado.getId(),
+                atualizado.getMensagem(),
+                atualizado.getDataHora(),
+                atualizado.getUsuario().getId()
+        );
+    }
+
+
+    //PAGINAR POR EMAIL DO USUARIO E ID
+    public Page<LembreteResponseDTO> listarTodosLembretesPaginado(Pageable pageable) {
+        Page<Lembrete> lembretePage = lembreteRepository.findAll(pageable);
         return lembretePage.map(lembreteMapper::toResponseDTO);
     }
 }

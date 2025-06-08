@@ -1,11 +1,15 @@
-# Etapa de build (com Java 21, compatível)
+
 FROM gradle:8.7.0-jdk21 AS BUILD
 WORKDIR /usr/app
+
 COPY . .
+
+
+RUN chmod +x ./gradlew
 
 RUN ./gradlew build -x test
 
-# Etapa de runtime
+
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 

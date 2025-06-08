@@ -63,6 +63,7 @@ public class LembreteController {
         Page<LembreteResponseDTO> lembretePage = lembreteService.listarTodosLembretesPaginado(pageable);
         return ResponseEntity.ok(lembretePage);
     }
+
     @PutMapping("/atualizar/email")
     public ResponseEntity<LembreteResponseDTO> atualizarEmailLembrete(@RequestBody LembreteRequest request) {
         try {
